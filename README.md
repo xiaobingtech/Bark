@@ -1,102 +1,84 @@
-English | **[中文](README.zh.md)**
-## Bark
-Bark is a push notification tool app. It's free, simple, and secure, leveraging APNs without draining device battery.<br/>
-Bark supports many advanced features of iOS notifications, including notification grouping, custom push icons, sounds, time-sensitive notifications, critical alerts, and more.<br/> 
-Additionally, Bark supports self-hosted servers and offers encrypted push notifications to ensure privacy and security. <br/>
+中文 | English
+# Bark
+Bark 是一款基于 APNs 的 iOS 推送通知工具，支持自建服务端与端到端加密，提供更细粒度的通知能力与可控的隐私方案。
 
-## Download
-<a target='_blank' href='https://apps.apple.com/app/bark-custom-notifications/id1403753865'>
-<img src='http://ww2.sinaimg.cn/large/0060lm7Tgw1f1hgrs1ebwj308102q0sp.jpg' width='144' height='49' />
-</a>
+## 功能概览
+- 推送能力：标题/副标题/正文、URL 跳转、分组、铃声、自定义图标、时效性通知、重要警告、徽标
+- 通知扩展：自动复制、图片与图标加载、Markdown 渲染、分组静音、归档开关、级别与音量处理
+- 历史记录：消息列表、分组聚合、搜索、按时间范围清理
+- 服务器管理：多服务端切换、复制地址与 key、重置 key、设置名称、扫码添加
+- 本地管理：自定义铃声导入与试听、备份与恢复、归档设置
 
-## Documentation
-[https://bark.day.app/#/en-us/](https://bark.day.app/#/en-us/)
+## UI 与页面
+- 服务页（Home）：注册推送、示例预览列表、添加自建服务器、进入服务器列表
+- 消息页（MessageList）：消息列表、分组展开/折叠、搜索、下拉刷新、批量清理
+- 设置页（MessageSettings）：归档开关、备份/恢复、设备信息、捐赠、入口跳转
+- 服务器列表（ServerList）：选择默认服务端、复制、重置 key、删除、设置名称
+- 添加服务器（NewServer）：输入地址、扫码导入、跳转部署文档
+- 铃声管理（Sounds）：系统与自定义铃声列表、试听、导入
+- iPad 分栏（Section iPad）：左侧主导航 + 右侧详情页
 
-## Feedback
-[Telegram](https://t.me/joinchat/OsCbLzovUAE0YjY1)
+## 架构与模块
+- 架构：MVVM + RxSwift（ViewModelType 协议统一输入输出）
+- 网络：Moya 封装 Bark API
+- 本地存储：Realm 保存消息与配置
+- 依赖：RxSwift/RxCocoa/RxDataSources、Material、SnapKit
+- 扩展：NotificationServiceExtension 处理推送内容，NotificationContentExtension 提供通知交互与图片展示
 
-## Usage
-1. Open the app and copy the test URL
+## 目录结构与职责
+- Bark/：应用入口、资源、配置与 AppDelegate
+- Common/：网络层、设置管理、工具方法、全局配置
+- Controller/：页面与导航控制器
+- View/：列表单元、控件、页眉页脚等 UI 组件
+- Model/：消息、分组、预览数据等数据模型
+- NotificationServiceExtension/：推送处理管线（加密、Markdown、归档、图标等）
+- notificationContentExtension/：通知展开视图与交互动作
+- Intents/：Siri/Shortcuts 相关意图支持
+- Sounds/：内置铃声资源
+- BarkTests/：单元测试
+- docs/：用户文档与部署说明
 
-<img src="https://wx4.sinaimg.cn/mw2000/003rYfqply1grd1meqrvcj60bi08zt9i02.jpg" width=365 />
+## 关键文件说明
+- Bark/AppDelegate.swift：应用入口、通知注册、Tab/分栏根控制器、推送点击处理
+- Bark/Info.plist：应用权限与基础配置
+- Bark/Localizable.xcstrings：本地化字符串
+- Bark/Bark.entitlements：推送与应用组权限
+- Bark/Base.lproj/LaunchScreen.storyboard：启动页
+- Bark/Assets.xcassets：图标与颜色资源
+- Controller/BarkTabBarController.swift：iPhone 三个 Tab 入口
+- Controller/BarkSplitViewController.swift：iPad 分栏容器
+- Controller/SectionViewController-iPad.swift：iPad 左侧栏目
+- Controller/HomeViewController.swift：服务页与示例预览
+- Controller/MessageListViewController.swift：消息列表与分组
+- Controller/MessageSettingsViewController.swift：设置页与备份
+- Controller/ServerListViewController.swift：服务器列表与操作
+- Controller/NewServerViewController.swift：添加服务器与扫码入口
+- Controller/QRScannerViewController.swift：二维码扫描
+- Controller/SoundsViewController.swift：铃声管理
+- Common/ServerManager.swift：服务器配置与同步
+- Common/ArchiveSettingManager.swift：归档设置
+- Common/CryptoSettingManager.swift：加密设置
+- Common/Moya/BarkApi.swift：服务端 API 定义
+- Model/Message.swift：消息数据模型
+- NotificationServiceExtension/NotificationService.swift：推送扩展处理流程
+- NotificationServiceExtension/Processor/*：推送处理器集合
+- notificationContentExtension/NotificationViewController.swift：通知内容展示与交互
+- Intents/*：Siri/Shortcuts 意图实现
+- Sounds/*：内置铃声音频资源
 
-2. Modify the content and request this URL
-```
-You can send GET or POST requests, and you'll receive a push notification immediately upon success.
+## 适配版本
+- 最低系统：iOS 13.0
+- iOS 14+：iPad 分栏、UIMenu 操作、文件导入
+- iOS 15+：自定义图标与部分通知动作
+- iOS 26+：搜索栏布局与分组圆角适配
 
-URL structure: The first part is the key, followed by three matches
-/:key/:body 
-/:key/:title/:body 
-/:key/:title/:subtitle/:body 
+## 下载与文档
+- App Store：https://apps.apple.com/app/bark-custom-notifications/id1403753865
+- 使用文档：https://bark.day.app
 
-title: The push title, slightly larger than the body text 
-subtitle: The push subtitle
-body: The push content, use the newline character '\n' for line breaks 
-For POST requests, the parameter names are the same as above
-```
-
-## Parameters
-
-* url
-```
-// Click on the push notification to jump to the specified URL
-https://api.day.app/yourkey/url?url=https://www.google.com 
-```
-* group
-```
-// Specify the push message group to view pushes by group.
-https://api.day.app/yourkey/group?group=groupName
-```
-* icon (supported on iOS 15 and above)
-```
-// Specify the push message icon
-https://api.day.app/yourkey/icon?icon=http://day.app/assets/images/avatar.jpg
-```
-* sound
-```
-// Specify the push message sound
-https://api.day.app/yourkey/sound?sound=alarm
-```
-* call
-```
-// Play sound repeatedly for 30 seconds
-https://api.day.app/yourkey/call?call=1
-```
-* ciphertext
-```
-// Encrypted push message
-https://api.day.app/yourkey/ciphertext?ciphertext=
-```
-* Time-sensitive notifications
-```
-// Set time-sensitive notifications
-https://api.day.app/yourkey/时效性通知?level=timeSensitive
-
-// Optional values 
-// active: Default value when not set, the system will immediately display the notification by lighting up the screen. 
-// timeSensitive: Time-sensitive notification, can be displayed during focus mode. 
-// passive: Adds notification to the notification list without lighting up the screen.
-```
-* Critical alerts
-```
-// Set critical alerts
-https://api.day.app/yourkey/criticalAlert?level=critical
-
-Critical alerts will ignore silent and do not disturb modes, always playing the notification sound and displaying on the screen.
-```
-
-## Others
-- [Browser Extension](https://github.com/ij369/bark-sender)
-- [Online Scheduled Sending](https://api.ihint.me/bark.html)
-- [Windows Push Client](https://github.com/HsuDan/BarkHelper)
-- [Cross-platform Command Line Application](https://github.com/JasonkayZK/bark-cli)
-- [Bark GitHub Actions](https://github.com/harryzcy/action-bark)
-- [Quicker Actions](https://getquicker.net/Sharedaction?code=e927d844-d212-4428-758d-08d69de12a3b)
-- [Bark for Wox](https://github.com/Zeroto521/Wox.Plugin.Bark)
-- [bark-jssdk](https://github.com/afeiship/bark-jssdk)
-- [bark.js](https://github.com/skyhancloud/bark.js)
-- [java-bark-server](https://gitee.com/hotlcc/java-bark-server)
-- [bark-java-sdk](https://github.com/MoshiCoCo/bark-java-sdk)
-- [Python for Bark](https://github.com/funny-cat-happy/barknotificator)
-- [uTools for Bark](https://u.tools/plugins/detail/PushOne/)
-- [PHP for Bark](https://github.com/guanguans/notify/tree/main/src/Bark/)
+## 生态
+- 浏览器扩展：https://github.com/ij369/bark-sender
+- 定时发送：https://api.ihint.me/bark.html
+- Windows 客户端：https://github.com/HsuDan/BarkHelper
+- 命令行：https://github.com/JasonkayZK/bark-cli
+- GitHub Actions：https://github.com/harryzcy/action-bark
